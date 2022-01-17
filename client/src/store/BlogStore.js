@@ -1,43 +1,69 @@
-import { action, observable } from "mobx";
+import { action, observable, toJS } from "mobx";
 import axios from "../config/axios";
 
 class BlogStore {
 
-    _blogs = [];
+    _blogs = observable([
+        {
+            "title": "Hello Title",
+            "content": "Hello Content"
+        }
+    ]);
+
+    constructor(){
+        this.getBlogs();
+    }
 
     get blogs () {
-        return this._blogs;
+        return toJS (this._blogs);
     }
 
     getBlogs = action(() => {
-        axios.get("/blog").then((response) => {
-            this._blogs = response.data;
+        return axios.get("/blog").then((response) => {
+            this._blogs.replace(response.data);
+            console.log(this.blogs);
         });
     });
 
-    addBlog = action(()=> {
-        axios.post("/blog", {
-            "title" : "Dababy's Sherlock",
-            "content" : "lorem 30"
-        }).then((response) => {
+    addBlog = action((blog,callback)=> {
+        axios.post("/blog", blog).then((response) => {
             if (response.status === 201){
                 this.getBlogs();
-                alert("Successfully Added Blog");
+                callback({});
             }else{
-                alert("Something went wrong");
+                callback({error: "Something went wrong"})
             }
         })
     });
 
-    deleteBlog = action((blog)=> {
-        axios.delete("/blog/" + blog.id).then(response => {
+    deleteBlog = action((id, callback)=> {
+        axios.delete("/blog/" + id).then(response => {
             if(response.status === 200){
-                alert("Successfully Deleted Blog");
+                this.getBlogs();
+                callback({})
             }else{
-                alert("Something went wrong.");
+                callback({
+                    error: "Something went wrong" 
+                })
             }
         })
     })
+
+    updateBlog = action((id, blog, callback) => {
+        axios.put("/blog/" + id, blog).then(response => {
+            if(response.status === 200){
+                this.getBlogs();
+                callback({});
+            }else{
+                callback({
+                    error: "Something went wrong"
+                })
+            }
+        })
+    })
+
 }
 
-export default new BlogStore();
+const blogStore = new BlogStore(); 
+window.blogStore = blogStore;
+export default blogStore;
