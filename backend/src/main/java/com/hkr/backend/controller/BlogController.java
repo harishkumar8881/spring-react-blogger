@@ -3,6 +3,7 @@ package com.hkr.backend.controller;
 import java.util.List;
 
 import com.hkr.backend.model.Blog;
+import com.hkr.backend.model.Comment;
 import com.hkr.backend.service.BlogService;
 
 import org.springframework.http.HttpStatus;
@@ -29,7 +30,7 @@ public class BlogController {
     }
 
     /*
-     * http://localhost:5432/api/blog/
+     * http://localhost:8080/api/blog/
      * Get the list of blogs
      */
     @GetMapping()
@@ -38,7 +39,7 @@ public class BlogController {
     }
 
     /*
-     * http://localhost:5432/api/blog/<id>
+     * http://localhost:8080/api/blog/<id>
      * Get a single Blog with id
      */
     @GetMapping("{id}")
@@ -47,7 +48,7 @@ public class BlogController {
     }
 
     /* 
-       POST http://localhost:5432/api/blog 
+       POST http://localhost:8080/api/blog 
        Create the blog
      */
     @PostMapping()
@@ -56,7 +57,7 @@ public class BlogController {
     }
 
     /* 
-        PUT http://localhost:5432/api/blog/<id>
+        PUT http://localhost:8080/api/blog/<id>
         Update the blog
      */
     @PutMapping("{id}")
@@ -67,13 +68,23 @@ public class BlogController {
 
 
     /* 
-        DELETE http://localhost:5432/api/blog/<id>
+        DELETE http://localhost:8080/api/blog/<id>
         Delete the blog
      */
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteBlog(@PathVariable("id") Long id){
         blogService.deleteBlog(id);
         return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+
+
+    /* 
+        POST http://localhost:8080/api/blog/comment
+        Add Comment to Blog
+     */
+    @PostMapping("comment")
+    public ResponseEntity<Long> addCommentToBlog(@RequestBody Comment comment){
+        return new ResponseEntity<Long>(blogService.addCommentToBlog(comment), HttpStatus.CREATED);
     }
 
 }

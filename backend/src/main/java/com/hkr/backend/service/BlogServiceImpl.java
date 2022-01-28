@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.hkr.backend.dao.BlogDao;
 import com.hkr.backend.model.Blog;
+import com.hkr.backend.model.Comment;
 
 import org.springframework.stereotype.Service;
 
@@ -41,5 +42,10 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public void deleteBlog(Long id) {
         blogDao.deleteBlog(id);
+    }
+
+    @Override
+    public Long addCommentToBlog(Comment comment) {
+        return blogDao.addCommentToBlog(comment);
     }
 }

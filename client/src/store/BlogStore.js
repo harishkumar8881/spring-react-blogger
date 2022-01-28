@@ -36,6 +36,17 @@ class BlogStore {
         })
     });
 
+    addCommentToBlog = action((text, blogid, callback) => {
+        axios.post("/blog/comment", {text, blogid}).then((response) => {
+            if(response.status === 201){
+                this.getBlogs(); 
+                callback({});
+            }else{
+                callback({error: "Something went wrong"})
+            }
+        })
+    });
+
     deleteBlog = action((id, callback)=> {
         axios.delete("/blog/" + id).then(response => {
             if(response.status === 200){

@@ -3,6 +3,7 @@ package com.hkr.backend.service;
 import java.util.List;
 
 import com.hkr.backend.model.Blog;
+import com.hkr.backend.model.Comment;
 
 public interface BlogService {
     public Long createBlog(Blog blog);
@@ -14,4 +15,6 @@ public interface BlogService {
     public void updateBlog(Blog blog, Long id);
 
     public void deleteBlog(Long id);
+
+    public Long addCommentToBlog(Comment comment);
 }
